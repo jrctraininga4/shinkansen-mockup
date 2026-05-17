@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新幹線での旅提案 - 最高の体験をお届け</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --accent-500: #fb923c; /* orange */
+            --accent-600: #ea580c;
+            --muted-700: #4b5563;
+            --card-bg: rgba(255,255,255,0.85);
+            --glass-border: rgba(255,255,255,0.6);
+            --shadow-strong: 0 18px 40px rgba(14,21,47,0.12);
+        }
+
+        /* Use modern fonts */
+        body, button, input, select, textarea {
+            font-family: 'Inter', 'Noto Sans JP', system-ui, -apple-system, 'Helvetica Neue', 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+        }
+        /* フェードイン・フェードアウトアニメーション */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        /* ステップコンテナ */
+        .step-container {
+            animation: fadeIn 0.6s ease-out;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step-container.fade-out {
+            animation: fadeOut 0.4s ease-in forwards;
+        }
+
+        /* ボタンのクリック感アニメーション */
+        @keyframes buttonPress {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .hobby-button {
+            transition: all 0.42s cubic-bezier(.2,.8,.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hobby-button:active {
+            animation: buttonPress 0.3s ease-out;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .hobby-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-logo {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 60;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        .site-logo:hover {
+            transform: translateY(-1px);
+        }
+
+        .site-logo:active {
+            transform: translateY(0);
+        }
+
+        .site-logo:focus-visible {
+            outline: 3px solid rgba(249, 115, 22, 0.35);
+            outline-offset: 2px;
+        }
+
+        .site-logo img {
+            display: block;
+            width: 64px;
+            height: auto;
+            opacity: 1;
+            filter: none;
+            border-radius: 6px;
+        }
+
+        /* Compact fixed header inside the phone-frame */
+        .site-header {
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            top: 12px;
+            z-index: 70;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(6px) saturate(120%);
+            border-radius: 12px;
+            border: 1px solid rgba(14,21,47,0.04);
+            box-shadow: 0 6px 20px rgba(14,21,47,0.08);
+        }
+
+        .site-header .header-logo img {
+            width: 44px;
+            height: auto;
+            display: block;
+        }
+
+        .site-header .site-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+        }
+
+        .site-header .header-cta {
+            background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+
+        /* プレースホルダー画像スタイル */
+        .placeholder-image {
+            background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* オーバーレイエフェクト */
+        .button-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* ステップの表示・非表示（軽量トランジション：opacity/transformのみ使用） */
+        .step {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 420ms cubic-bezier(.16,.84,.24,1), transform 420ms cubic-bezier(.16,.84,.24,1);
+            will-change: opacity, transform;
+        }
+
+        .step.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 退出アニメーションは active を残したまま opacity と transform を切り替える（display は維持） */
+        .step.active.is-exiting {
+            opacity: 0;
+            transform: translateY(-8px);
+            pointer-events: none;
+        }
+
+        /* スムーズなスクロール */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* プライマリボタン */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+            transition: all 0.42s cubic-bezier(.2,.8,.2,1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(234,88,12,0.16);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(234, 88, 12, 0.28);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        /* セカンダリボタン */
+        .btn-secondary {
+            background: white;
+            border: 2px solid #e5e7eb;
+            color: #374151;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #ea580c;
+            color: #ea580c;
+            background: #f9fafb;
+        }
+
+        /* テキストアニメーション */
+        .text-animate {
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        /* 背景パターン */
+        .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(251, 146, 60, 0.16) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(234, 88, 12, 0.14) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .related-carousel {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 82%;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+        }
+
+        .related-carousel > * {
+            scroll-snap-align: start;
+        }
+
+        /* Card hover and refined styles for related items */
+        .related-carousel a {
+            transition: transform 0.42s ease, box-shadow 0.42s ease;
+            will-change: transform;
+            background: var(--card-bg);
+            backdrop-filter: blur(6px) saturate(120%);
+        }
+
+        .related-carousel a:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 18px 40px rgba(14,21,47,0.12);
+        }
+
+        /* Phone frame to make the site look like a polished mobile preview */
+        .phone-frame {
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.72));
+            border-radius: 22px;
+            padding: 56px 18px 18px; /* reduce top padding so header is closer */
+            box-shadow: var(--shadow-strong);
+            border: 1px solid rgba(14,21,47,0.04);
+        }
+
+        /* Hobby buttons: more modern glass-like cards */
+        .hobby-button {
+            background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.6));
+            border: 1px solid rgba(14,21,47,0.06);
+            box-shadow: 0 8px 18px rgba(14,21,47,0.06);
+            color: #1f2937;
+        }
+
+        /* Site header styles */
+        .site-header {
+                position: absolute;
+                left: 12px;
+                right: 12px;
+                top: 10px;
+                z-index: 70;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 10px 14px; /* larger header */
+                background: rgba(255,255,255,0.7);
+                backdrop-filter: blur(6px) saturate(120%);
+                border-radius: 14px;
+                border: 1px solid rgba(14,21,47,0.04);
+                box-shadow: 0 8px 26px rgba(14,21,47,0.09);
+            }
+
+            .site-header .header-logo img {
+                width: 52px;
+                height: auto;
+                display: block;
+            }
+
+            .site-header .site-name {
+                font-size: 22px;
+                font-weight: 700;
+                color: #111827;
+                text-align: center;
+            }
+
+            .site-header .header-cta {
+                background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+
+        .hobby-button > span:first-child {
+            color: #1f2937;
+        }
+
+        .hobby-button > span:nth-child(2) {
+            color: #1f2937;
+        }
+
+        .hobby-button > span:last-child {
+            color: #4b5563;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-sans bg-pattern">
+    <!-- メインコンテナ -->
+    <div class="w-full min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-50">
+        <div class="relative w-full max-w-md mx-auto px-4 phone-frame">
+            <header class="site-header">
+                <a class="header-logo" href="https://jr-central.co.jp/" target="_blank" rel="noopener noreferrer" aria-label="JR東海の公式サイトへ">
+                    <img src="JR_Central_logo.svg.png" alt="JR東海">
+                </a>
+                <div class="header-title">
+                    <div class="site-name">JR東海施策検討</div>
+                </div>
+                <a id="headerCta" href="#" class="btn-primary header-cta text-white py-2 px-3 rounded-lg text-sm">旅を探す</a>
+            </header>
+
+            <!-- ステップ1：クイズ正解発表画面 -->
+            <div id="step1" class="step active step-container pb-12">
+                <div class="flex-1 flex flex-col justify-between">
+                    <!-- メインコンテンツ -->
+                    <div class="flex-1 flex flex-col justify-center space-y-8 pt-8">
+                        <!-- タイトル -->
+                        <div class="text-center">
+                            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-600 mb-4 text-animate">
+                                正解は
+                            </h1>
+                            <p class="text-5xl font-black text-orange-700 text-animate" style="animation-delay: 0.3s;">
+                                飛騨高山
+                            </p>
+                            <p class="text-3xl font-bold mt-4 text-gray-700 text-animate" style="animation-delay: 0.4s;">
+                                でした！
+                            </p>
+                        </div>
+
+                        <!-- 正解画像（ローカルに置いた takayama.png を使用） -->
+                        <div class="rounded-2xl overflow-hidden shadow-lg">
+                            <img id="answerImage" src="takayama.png" alt="飛騨高山の風景" class="w-full h-64 object-cover">
+                        </div>
+
+                        <!-- ガイドテキスト -->
+                        <div class="text-center space-y-4">
+                            <p class="text-lg text-gray-700 font-medium">
+                                あなたの趣味を選んで、<br>
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-600 font-bold">
+                                    おすすめの旅を見つけよう！
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- ボタン -->
+                    <div class="pt-8">
+                        <button id="nextBtn1" class="w-full btn-primary text-white py-4 px-6 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all">
+                            次へ進む
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップ2：趣味選択画面 -->
+            <div id="step2" class="step step-container pb-12">
+                <div class="flex-1 flex flex-col justify-between">
+                    <!-- ヘッダー -->
+                    <div class="pt-8 pb-6">
+                        <button id="backToStep1Btn" class="btn-secondary py-2 px-4 rounded-lg font-semibold text-sm mb-4">
+                            ← 戻る
+                        </button>
+                        <h2 class="text-3xl font-bold text-center">
+                            あなたの趣味は？
+                        </h2>
+                        <p class="text-center text-gray-500 mt-2">好きなジャンルを選んでください</p>
+                    </div>
+
+                    <!-- メインコンテンツ -->
+                    <div class="flex-1 flex flex-col justify-center space-y-4">
+                        <!-- ホビーボタン1 -->
+                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="soccer">
+                            <span class="text-2xl">⚽️</span>
+                            <span class="flex-1 ml-4">サッカー観戦・<br>スタジアム巡り</span>
+                            <span class="text-2xl">→</span>
+                        </button>
+
+                        <!-- ホビーボタン2 -->
+                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="anime">
+                            <span class="text-2xl">🎬</span>
+                            <span class="flex-1 ml-4">アニメ聖地巡礼・<br>物語の舞台探訪</span>
+                            <span class="text-2xl">→</span>
+                        </button>
+
+                        <!-- ホビーボタン3 -->
+                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="idol">
+                            <span class="text-2xl">🎤</span>
+                            <span class="flex-1 ml-4">アイドル推し活・<br>ライブ遠征を楽しむ旅</span>
+                            <span class="text-2xl">→</span>
+                        </button>
+
+                        <!-- ホビーボタン4（サイクリング） -->
+                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="cycling">
+                            <span class="text-2xl">🚴</span>
+                            <span class="flex-1 ml-4">サイクリング・<br>自然とグルメを楽しむ旅</span>
+                            <span class="text-2xl">→</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップ3：おすすめパッケージ提案画面 -->
+            <div id="step3" class="step step-container pb-12">
+                <div class="flex-1 flex flex-col justify-between">
+                    <!-- ヘッダー -->
+                    <div class="pt-8 pb-6">
+                        <h2 class="text-2xl font-bold text-center">
+                            あなたにおすすめの旅
+                        </h2>
+                    </div>
+
+                    <!-- メインコンテンツ -->
+                    <div class="flex-1 flex flex-col justify-center space-y-6">
+                        <!-- パッケージ画像 -->
+                        <div class="rounded-2xl overflow-hidden shadow-lg">
+                            <img id="packageImage" src="" alt="パッケージ画像" class="w-full h-80 object-cover">
+                        </div>
+
+                        <!-- パッケージ情報 -->
+                        <div class="space-y-3">
+                            <h3 id="packageTitle" class="text-2xl font-bold text-gray-800">
+                                パッケージタイトル
+                            </h3>
+                            <p id="packageDesc" class="text-gray-600 text-base leading-relaxed">
+                                パッケージの説明がここに表示されます。
+                            </p>
+                            <!-- キャンペーン情報 -->
+                            <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg p-4 mt-4 border-l-4 border-orange-600">
+                                <p id="campaignText" class="text-sm font-semibold text-orange-700">
+                                    キャンペーン情報
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 関連紹介スライド -->
+                        <div id="relatedSection" class="space-y-3 hidden">
+                            <div class="flex items-end justify-between">
+                                <h4 class="text-lg font-bold text-gray-800">関連のおすすめ</h4>
+                                <span class="text-xs text-gray-500">左右にスライド</span>
+                            </div>
+                            <div id="relatedCarousel" class="related-carousel"></div>
+                        </div>
+                    </div>
+
+                    <!-- ボタン -->
+                    <div class="space-y-3 pt-8">
+                        <button id="backToStep2Btn" class="w-full btn-secondary py-3 px-6 rounded-xl font-bold text-base transition-all">
+                            ← 趣味選択に戻る
+                        </button>
+                        <button id="favoriteBtn" class="w-full btn-secondary py-3 px-6 rounded-xl font-bold text-base transition-all">
+                            💝 お気に入りに保存（ログイン）
+                        </button>
+                        <a id="detailBtn" href="#" target="_blank" class="w-full btn-primary text-white py-4 px-6 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all block text-center">
+                            🔍 詳細を見る
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // パッケージデータ
+        const packages = {
+            soccer: {
+                title: '🧡 清水エスパルス 推し旅特別企画',
+                desc: '清水エスパルスとJR東海のコラボ企画をベースにした、スタジアム応援と新幹線旅をつなぐ特別な推し旅です。試合観戦の高揚感を、そのまま旅の体験につなげます。',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/s-pulse/2026specialseason/img/kv_banner.jpg',
+                campaign: '清水エスパルス✕JR東海 応援宣言！第2弾のページへご案内します。',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/s-pulse/2026specialseason/',
+                related: [
+                    {
+                        title: 'Jリーグ招待',
+                        desc: '国立競技場でJリーグの試合を観戦しよう！EXサービス会員向けの招待企画。',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/jleague/img/img_mv.jpg',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/jleague/'
+                    },
+                    {
+                        title: '高校サッカー準決勝',
+                        desc: '特別席観戦＆北澤豪氏と裏側見学。国立競技場の裏側も楽しめる企画。',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/jleague/img/img_detail01.jpg',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/contents038.html'
+                    }
+                ]
+            },
+            anime: {
+                title: '🎬 五等分の花嫁×推し旅（五等分の花嫁 3rd）',
+                desc: '「五等分の花嫁」コラボの推し旅。名古屋を舞台にしたスタンプラリーやボイスドラマ、限定グッズなど車内コンテンツが楽しめます。',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/5hanayome3rd/img/mv_pc.png',
+                campaign: '五等分の花嫁×JR東海 コラボ特設ページへ',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/5hanayome3rd/',
+                related: []
+            },
+            idol: {
+                title: '🌸 FRUITS ZIPPER×JR東海（アイドルコラボ）',
+                desc: 'FRUITS ZIPPERの東海道新幹線限定コンテンツ。トークやARフォトフレーム、抽選プレゼントなど、車内で楽しめる特典が充実しています。',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/fruitszipper5th/img/KV-img.jpg',
+                campaign: 'FRUITS ZIPPER コラボ特設ページへ',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/fruitszipper5th/',
+                related: [
+                    {
+                        title: 'BE:FIRST × JR東海',
+                        desc: '音声コンテンツやプレゼント企画が楽しめるBE:FIRSTコラボ第2弾。',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/befirst2nd/img/pic_profile@2x.webp',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/befirst2nd/'
+                    },
+                    {
+                        title: 'ちゃやまちアイドルパーク × JR東海',
+                        desc: '私立恵比寿中学編。車内限定トークやステッカー施策が楽しめます。',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/idolpark_01_ebichu/img/main_tit_pc.png',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/idolpark_01_ebichu/'
+                    },
+                    {
+                        title: 'NiziU × JR東海',
+                        desc: '貸切新幹線ツアーや車内装飾など、NiziU仕様の特別な旅。',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/niziuexpress/img/pic_hero@2x.webp?v=2604002',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/niziuexpress/'
+                    },
+                    {
+                        title: 'BEYOOOOONDS -会いにいこうキャンペーン-',
+                        desc: '車内限定コンテンツやノベルティ施策が揃う、会いにいこう企画。',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/beyooooonds4th/img/img_mv01_pc.png',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/beyooooonds4th/'
+                    },
+                    {
+                        title: '≠ME × JR東海',
+                        desc: 'Special Contentsや壁紙、ポストカードなど盛りだくさんの企画。',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/not-equal-me/img/top.jpg',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/not-equal-me/'
+                    },
+                    {
+                        title: 'IVE × JR東海',
+                        desc: 'Special Moviesやプレゼント施策、駅広告まで広がるIVEコラボ。',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/ive/img/pic_wonyoung@2x.webp',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/ive/'
+                    }
+                ]
+            },
+            cycling: {
+                title: '🚴 浜名湖サイクリング（サイクリング）',
+                desc: '浜名湖サイクリングの紹介ページ。レンタサイクル情報やおすすめルート、クーポン情報などを掲載。ゆるめのチャレンジで自然とグルメを楽しめます。',
+                image: 'https://recommend.jr-central.co.jp/hamanako-cyc/assets/img/top/img-kv@2x.png',
+                campaign: '浜名湖サイクリング 特設ページへ',
+                url: 'https://recommend.jr-central.co.jp/hamanako-cyc/',
+                related: []
+            }
+        };
+
+        let currentStep = 1;
+        let selectedHobby = null;
+
+        // ステップ切り替え関数（次画面は退出完了後に表示してフェードイン）
+        function switchStep(fromStep, toStep) {
+            const fromElement = document.getElementById(`step${fromStep}`);
+            const toElement = document.getElementById(`step${toStep}`);
+
+            // Ensure target is hidden and reset any states
+            toElement.classList.remove('active', 'is-exiting');
+            toElement.style.display = 'none';
+
+            // Start exit animation on current step
+            fromElement.classList.add('is-exiting');
+
+            let finished = false;
+            const finishTransition = () => {
+                if (finished) return;
+                finished = true;
+                fromElement.removeEventListener('transitionend', onEnd);
+                fromElement.classList.remove('is-exiting', 'active');
+                fromElement.style.display = 'none';
+
+                // Show target but keep it in initial (non-active) state, then trigger enter
+                toElement.style.display = 'flex';
+                // Double rAF to ensure the browser registers the state change
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    toElement.classList.add('active');
+                    currentStep = toStep;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }));
+            };
+
+            const onEnd = (e) => {
+                if (e.target !== fromElement) return;
+                finishTransition();
+            };
+
+            fromElement.addEventListener('transitionend', onEnd);
+
+            // Fallback in case transitionend doesn't fire (matches CSS duration)
+            setTimeout(() => {
+                finishTransition();
+            }, 680);
+        }
+
+        // ステップ1 → ステップ2
+        document.getElementById('nextBtn1').addEventListener('click', function() {
+            switchStep(1, 2);
+        });
+
+        // 戻るボタン
+        document.getElementById('backToStep1Btn').addEventListener('click', function() {
+            switchStep(2, 1);
+        });
+
+        document.getElementById('backToStep2Btn').addEventListener('click', function() {
+            switchStep(3, 2);
+        });
+
+        // ステップ2のホビーボタンイベント
+        document.querySelectorAll('.hobby-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                selectedHobby = this.dataset.hobby;
+                updatePackage(selectedHobby);
+                switchStep(2, 3);
+            });
+
+            // リップルエフェクト
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('button-ripple');
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                button.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // パッケージ更新関数
+        function updatePackage(hobby) {
+            const package = packages[hobby];
+            if (!package) {
+                console.error('パッケージが見つかりません:', hobby);
+                return;
+            }
+
+            document.getElementById('packageTitle').textContent = package.title;
+            document.getElementById('packageDesc').textContent = package.desc;
+            document.getElementById('packageImage').src = package.image;
+            document.getElementById('packageImage').alt = package.title;
+            document.getElementById('campaignText').textContent = package.campaign;
+            document.getElementById('detailBtn').href = package.url;
+
+            const relatedSection = document.getElementById('relatedSection');
+            const relatedCarousel = document.getElementById('relatedCarousel');
+            const relatedItems = package.related || [];
+
+            relatedCarousel.innerHTML = '';
+
+            if (relatedItems.length === 0) {
+                relatedSection.classList.add('hidden');
+                return;
+            }
+
+            relatedItems.forEach(item => {
+                const link = document.createElement('a');
+                link.href = item.url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.className = 'block rounded-2xl overflow-hidden shadow-md bg-white border border-gray-100';
+                link.innerHTML = `
+                    <div class="aspect-[4/3] overflow-hidden bg-gray-100">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 space-y-2">
+                        <p class="text-xs font-semibold text-orange-600">関連紹介</p>
+                        <h5 class="text-base font-bold text-gray-900">${item.title}</h5>
+                        <p class="text-sm text-gray-600 leading-relaxed">${item.desc}</p>
+                    </div>
+                `;
+                relatedCarousel.appendChild(link);
+            });
+
+            relatedSection.classList.remove('hidden');
+        }
+
+        // ボタンのイベントリスナー
+        document.getElementById('favoriteBtn').addEventListener('click', function() {
+            alert('ログイン機能は別途実装予定です');
+        });
+
+        // 初期化
+        window.addEventListener('load', function() {
+            console.log('アプリ準備完了');
+        });
+    </script>
+</body>
+</html>
