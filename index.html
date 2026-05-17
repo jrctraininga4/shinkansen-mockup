@@ -562,6 +562,27 @@
                             🔍 詳細を見る
                         </a>
                     </div>
+
+                    <!-- フィードバック入力欄 -->
+                    <div class="mt-8 pt-6 border-t border-gray-200 space-y-3">
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            他に興味のある趣味がある場合はこちらに入力してください。<br>今後の施策の参考にします。
+                        </p>
+                        <form id="feedbackForm" class="space-y-2">
+                            <input 
+                                type="text" 
+                                id="feedbackInput" 
+                                placeholder="例：登山、温泉、グルメツアー..." 
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            >
+                            <button type="submit" class="w-full btn-primary text-white py-2 px-4 rounded-lg font-semibold text-sm">
+                                送信する
+                            </button>
+                        </form>
+                        <p id="feedbackThanks" class="hidden text-sm text-gray-600 leading-relaxed text-center py-2">
+                            ご協力ありがとうございます。
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -826,6 +847,32 @@
                 });
             }
         })();
+
+        // フィードバック入力フォーム処理
+        window.addEventListener('load', function(){
+            const form = document.getElementById('feedbackForm');
+            const input = document.getElementById('feedbackInput');
+            const thanks = document.getElementById('feedbackThanks');
+            if (form && input && thanks) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const text = input.value.trim();
+                    if (text.length === 0) {
+                        return;
+                    }
+                    // ローカルストレージに保存（デモ用）
+                    const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+                    feedbacks.push({
+                        hobby: text,
+                        timestamp: new Date().toLocaleString('ja-JP')
+                    });
+                    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+                    // フォームを非表示、メッセージを表示
+                    form.classList.add('hidden');
+                    thanks.classList.remove('hidden');
+                });
+            }
+        });
 
         // 初期化
         window.addEventListener('load', function() {
