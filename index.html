@@ -277,17 +277,49 @@
             scroll-snap-align: start;
         }
 
-        /* Card hover and refined styles for related items */
-        .related-carousel a {
-            transition: transform 0.42s ease, box-shadow 0.42s ease;
+        /* Card system */
+        .surface-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,250,245,0.96) 100%);
+            border: 2px solid rgba(249,115,22,0.16);
+            border-radius: 22px;
+            box-shadow:
+                0 18px 42px rgba(14,21,47,0.14),
+                0 2px 0 rgba(255,255,255,0.9) inset;
+            overflow: hidden;
+            transform: translateY(0);
+            transition: transform 0.42s cubic-bezier(.16,.84,.24,1), box-shadow 0.42s cubic-bezier(.16,.84,.24,1), border-color 0.42s ease;
             will-change: transform;
-            background: var(--card-bg);
-            backdrop-filter: blur(6px) saturate(120%);
         }
 
-        .related-carousel a:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 18px 40px rgba(14,21,47,0.12);
+        .surface-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow:
+                0 24px 56px rgba(14,21,47,0.18),
+                0 8px 18px rgba(249,115,22,0.10);
+            border-color: rgba(249,115,22,0.30);
+        }
+
+        .surface-card-hero {
+            box-shadow:
+                0 22px 54px rgba(14,21,47,0.18),
+                0 0 0 1px rgba(255,255,255,0.8) inset;
+        }
+
+        .surface-card-hero:hover {
+            transform: translateY(0);
+            box-shadow:
+                0 22px 54px rgba(14,21,47,0.18),
+                0 0 0 1px rgba(255,255,255,0.8) inset;
+            border-color: rgba(249,115,22,0.16);
+        }
+
+        .surface-card-media {
+            background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0));
+        }
+
+        .surface-card-body {
+            background: rgba(255,255,255,0.99);
+            border-top: 1px solid rgba(14,21,47,0.06);
         }
 
         /* 解説トグルボタンと説明領域 */
@@ -429,7 +461,7 @@
                         </div>
 
                         <!-- 正解画像（ローカルに置いた takayama.png を使用） -->
-                        <div class="rounded-2xl overflow-hidden shadow-lg">
+                        <div class="surface-card surface-card-hero">
                             <img id="answerImage" src="takayama.png" alt="飛騨高山の風景" class="w-full h-64 object-cover">
                         </div>
 
@@ -520,9 +552,9 @@
                     <!-- メインコンテンツ -->
                     <div class="flex-1 flex flex-col justify-center space-y-6">
                         <!-- パッケージ画像 -->
-                        <div class="rounded-2xl overflow-hidden shadow-lg">
+                        <a id="packageImageLink" href="#" target="_blank" rel="noopener noreferrer" class="surface-card surface-card-hero block cursor-pointer" aria-label="おすすめの旅の詳細を見る">
                             <img id="packageImage" src="" alt="パッケージ画像" class="w-full h-80 object-cover">
-                        </div>
+                        </a>
 
                         <!-- パッケージ情報 -->
                         <div class="space-y-3">
@@ -794,6 +826,7 @@
             document.getElementById('packageDesc').textContent = package.desc;
             document.getElementById('packageImage').src = package.image;
             document.getElementById('packageImage').alt = package.title;
+            document.getElementById('packageImageLink').href = package.url;
             document.getElementById('campaignText').textContent = package.campaign;
             document.getElementById('detailBtn').href = package.url;
 
@@ -813,12 +846,12 @@
                 link.href = item.url;
                 link.target = '_blank';
                 link.rel = 'noopener noreferrer';
-                link.className = 'block rounded-2xl overflow-hidden shadow-md bg-white border border-gray-100';
+                link.className = 'surface-card block';
                 link.innerHTML = `
-                    <div class="aspect-[4/3] overflow-hidden bg-gray-100">
+                    <div class="surface-card-media aspect-[4/3] overflow-hidden bg-gray-100">
                         <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
                     </div>
-                    <div class="p-4 space-y-2">
+                    <div class="surface-card-body p-4 space-y-2">
                         <p class="text-xs font-semibold text-orange-600">関連紹介</p>
                         <h5 class="text-base font-bold text-gray-900">${item.title}</h5>
                         <p class="text-sm text-gray-600 leading-relaxed">${item.desc}</p>
