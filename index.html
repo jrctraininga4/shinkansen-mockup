@@ -363,20 +363,22 @@
         }
 
         /* Phone frame to make the site look like a polished mobile preview */
+        /* Phone frame to make the site look like a polished mobile preview */
         .phone-frame {
             background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.72));
             border-radius: 22px;
-            padding: 56px 18px 18px; /* reduce top padding so header is closer */
+            padding: 56px 18px 18px;
             box-shadow: var(--shadow-strong);
             border: 1px solid rgba(14,21,47,0.04);
+        }
         }
 
         /* Hobby buttons: more modern glass-like cards */
         .hobby-button {
-            background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.6));
-            border: 1px solid rgba(14,21,47,0.06);
-            box-shadow: 0 8px 18px rgba(14,21,47,0.06);
-            color: #1f2937;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+            border: 1px solid rgba(212,175,55,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: #ffffff;
         }
 
         /* Site header styles */
@@ -434,15 +436,15 @@
 <body class="bg-white text-gray-800 font-sans bg-pattern">
     <!-- メインコンテナ -->
     <div class="w-full min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-50">
-        <div class="relative w-full max-w-md mx-auto px-4 phone-frame">
+        <div class="relative w-full max-w-sm mx-auto px-4 phone-frame">
             <header class="site-header">
-                <a class="header-logo" href="https://jr-central.co.jp/" target="_blank" rel="noopener noreferrer" aria-label="JR東海の公式サイトへ">
+                <a class="header-logo" href="https://jr-central.co.jp/" target="_blank" rel="noopener noreferrer" aria-label="JR東海のサイトへ">
                     <img src="JR_Central_logo.svg.png" alt="JR東海">
                 </a>
                 <div class="header-title">
                     <div class="site-name">JR東海施策検討</div>
                 </div>
-                <a id="headerCta" href="https://recommend.jr-central.co.jp/#sec-area" target="_blank" rel="noopener noreferrer" class="btn-primary header-cta text-white py-2 px-3 rounded-lg text-sm">旅を探す</a>
+                <a id="headerCta" href="https://recommend.jr-central.co.jp/#sec-area" target="_blank" rel="noopener noreferrer" class="btn-primary header-cta text-white py-2 px-3 rounded-lg text-sm">一覧を見る</a>
             </header>
 
             <!-- ステップ1：クイズ正解発表画面 -->
@@ -597,7 +599,7 @@
                         <button id="favoriteBtn" class="w-full btn-secondary py-3 px-6 rounded-xl font-bold text-base transition-all">
                             💝 お気に入りに保存（ログイン）
                         </button>
-                        <a id="detailBtn" href="#" target="_blank" class="w-full btn-primary text-white py-4 px-6 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all block text-center">
+                        <a id="detailBtn" href="https://recommend.jr-central.co.jp/#sec-area" target="_blank" rel="noopener noreferrer" class="w-full btn-primary text-white py-4 px-6 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all block text-center">
                             🔍 詳細を見る
                         </a>
                     </div>
@@ -627,6 +629,30 @@
 
         </div>
     </div>
+
+    <!-- フッター -->
+    <footer class="bg-white/95 backdrop-blur border-t border-orange-200/30 py-12 mt-16">
+        <div class="max-w-sm mx-auto px-4">
+            <!-- Xへの案内 -->
+            <div class="mb-10 text-center">
+                <a href="https://x.com/oshitabi_update" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-6 py-3 bg-black text-white rounded-lg hover:shadow-lg transition-all transform hover:scale-105 font-medium">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.627l-5.1-6.658-5.712 6.658H2.562l7.73-8.835L1.097 2.25h6.605l4.713 6.231 5.579-6.231zm-.565 19.5h1.828L5.41 4.125H3.45z"/></svg>
+                    推し旅X
+                </a>
+            </div>
+
+            <!-- READ ME セクション -->
+            <div class="mb-10 pb-10 border-b border-orange-100">
+                <h3 class="font-bold text-lg text-gray-800 mb-4">ご一読ください</h3>
+                <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+                    <p class="font-semibold text-orange-600">⚠️ 本サイトは非公式の情報紹介サイトです</p>
+                    <p>• 掲載されている情報は変更される可能性があります</p>
+                    <p>• 各キャンペーンの詳細は推し旅の公式サイトをご確認ください</p>
+                    <p>• 企画内容に変更・中止があった場合、きっぷの払い戻しにはお応えできません</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // パッケージデータ
@@ -658,7 +684,38 @@
                 image: 'https://recommend.jr-central.co.jp/oshi-tabi/5hanayome3rd/img/mv_pc.png',
                 campaign: '五等分の花嫁×JR東海 コラボ特設ページへ',
                 url: 'https://recommend.jr-central.co.jp/oshi-tabi/5hanayome3rd/',
-                related: []
+                related: [
+                    {
+                        title: '🎬 薬屋のひとりごと×JR東海',
+                        desc: '薬屋のふたりたび 大阪篇',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/kusuriya003/assets/images/mv.webp',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/kusuriya003/'
+                    },
+                    {
+                        title: '🎬 最終楽章 響け！ユーフォニアム×JR東海',
+                        desc: '劇場公開記念キャンペーン前編',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/eupho-finale_spring/img/ttl.png',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/eupho-finale_spring/'
+                    },
+                    {
+                        title: '🎬 呪術廻戦×JR東海 新幹線で行く じゅじゅ探訪',
+                        desc: '第3弾！名古屋で楽しめる限定企画',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/jujutanbo03/img/top/kv.jpg',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/jujutanbo03/'
+                    },
+                    {
+                        title: '🎬 負けヒロインが多すぎる！×JR東海',
+                        desc: 'Part2 豊橋へようこそ 雨森たきび先生書き下ろし',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/makeine4th/img/mv_pc.png',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/makeine4th/'
+                    },
+                    {
+                        title: '🎬 ラブライブ！サンシャイン!!×JR東海',
+                        desc: '僕らの旅は終わらない 沼津でノベルティGET',
+                        image: 'https://recommend.jr-central.co.jp/oshi-tabi/lovelive_sunshine_bokuranotabi/img/mv_pc.jpg',
+                        url: 'https://recommend.jr-central.co.jp/oshi-tabi/lovelive_sunshine_bokuranotabi/'
+                    }
+                ]
             },
             idol: {
                 title: '🌸 FRUITS ZIPPER×JR東海（アイドルコラボ）',
@@ -835,7 +892,7 @@
             document.getElementById('packageImage').alt = package.title;
             document.getElementById('packageImageLink').href = package.url;
             document.getElementById('campaignText').textContent = package.campaign;
-            document.getElementById('detailBtn').href = package.url;
+            document.getElementById('detailBtn').href = 'https://recommend.jr-central.co.jp/#sec-area';
 
             const relatedSection = document.getElementById('relatedSection');
             const relatedCarousel = document.getElementById('relatedCarousel');
