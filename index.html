@@ -573,11 +573,27 @@
                             <p id="packageDesc" class="text-gray-600 text-base leading-relaxed">
                                 パッケージの説明がここに表示されます。
                             </p>
-                            <!-- キャンペーン情報 -->
+                            <!-- 旅検索フォーム -->
                             <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg p-4 mt-4 border-l-4 border-orange-600">
-                                <p id="campaignText" class="text-sm font-semibold text-orange-700">
-                                    キャンペーン情報
-                                </p>
+                                <form id="travelSearchForm" class="space-y-2">
+                                    <p class="text-sm font-semibold text-orange-700 mb-3">見たい旅が見つかりませんか？</p>
+                                    <input 
+                                        type="text" 
+                                        id="travelSearchInput" 
+                                        placeholder="例：温泉、グルメ、歴史、アウトドア..." 
+                                        class="w-full px-4 py-3 rounded-lg border border-orange-200 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                        autocomplete="off"
+                                    >
+                                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-all">
+                                        🔍 このキーワードで旅を探す
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- 検索結果表示エリア -->
+                            <div id="searchResultsSection" class="hidden mt-6 pt-6 border-t border-gray-200 space-y-4">
+                                <h4 class="text-lg font-bold text-gray-800">🔍 検索結果：<span id="searchKeywordDisplay"></span></h4>
+                                <div id="searchResultsList" class="space-y-3 max-h-80 overflow-y-auto"></div>
                             </div>
                         </div>
 
@@ -655,7 +671,82 @@
     </footer>
 
     <script>
-        // パッケージデータ
+        // パッケージデータ（フラット化：全パッケージをリスト化）
+        const allPackages = [
+            {
+                id: 'soccer',
+                title: '🧡 清水エスパルス 推し旅特別企画',
+                desc: '清水エスパルスとJR東海のコラボ企画をベースにした、スタジアム応援と新幹線旅をつなぐ特別な推し旅です。試合観戦の高揚感を、そのまま旅の体験につなげます。',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/s-pulse/2026specialseason/img/kv_banner.jpg',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/s-pulse/2026specialseason/',
+                keywords: ['サッカー', 'スタジアム', '応援', 'サッカー観戦', 'エスパルス']
+            },
+            {
+                id: 'anime',
+                title: '🎬 五等分の花嫁×推し旅（五等分の花嫁 3rd）',
+                desc: '「五等分の花嫁」コラボの推し旅。名古屋を舞台にしたスタンプラリーやボイスドラマ、限定グッズなど車内コンテンツが楽しめます。',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/5hanayome3rd/img/mv_pc.png',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/5hanayome3rd/',
+                keywords: ['アニメ', '五等分', '聖地巡礼', 'アニメコラボ', '名古屋']
+            },
+            {
+                id: 'idol',
+                title: '🌸 FRUITS ZIPPER×JR東海（アイドルコラボ）',
+                desc: 'FRUITS ZIPPERの東海道新幹線限定コンテンツ。トークやARフォトフレーム、抽選プレゼントなど、車内で楽しめる特典が充実しています。',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/fruitszipper5th/img/KV-img.jpg',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/fruitszipper5th/',
+                keywords: ['アイドル', '推し活', 'FRUITS ZIPPER', 'ライブ', 'グッズ']
+            },
+            {
+                id: 'cycling',
+                title: '🚴 浜名湖サイクリング（サイクリング）',
+                desc: '浜名湖サイクリングの紹介ページ。レンタサイクル情報やおすすめルート、クーポン情報などを掲載。ゆるめのチャレンジで自然とグルメを楽しめます。',
+                image: 'https://recommend.jr-central.co.jp/hamanako-cyc/assets/img/top/img-kv@2x.png',
+                url: 'https://recommend.jr-central.co.jp/hamanako-cyc/',
+                keywords: ['サイクリング', '浜名湖', 'グルメ', '自然', 'レンタル']
+            },
+            {
+                id: 'golf',
+                title: '⛳️ ゴルフ・コース巡り（静岡）',
+                desc: '静岡エリアのゴルフ場をめぐるプラン。アクセスや宿泊、スループレー情報などをまとめたツアー案内です。',
+                image: 'https://travel.jr-central.co.jp/plan/area/shizuoka/golf/images/mv_pc.webp',
+                url: 'https://travel.jr-central.co.jp/plan/area/shizuoka/golf/',
+                keywords: ['ゴルフ', 'コース巡り', '静岡', 'グリーン', 'ラウンド']
+            },
+            {
+                id: 'anime-related-1',
+                title: '🎬 薬屋のひとりごと×JR東海',
+                desc: '薬屋のふたりたび 大阪篇',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/kusuriya003/assets/images/mv.webp',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/kusuriya003/',
+                keywords: ['アニメ', '薬屋', '大阪', '聖地', 'アニメコラボ']
+            },
+            {
+                id: 'anime-related-2',
+                title: '🎬 呪術廻戦×JR東海 新幹線で行く じゅじゅ探訪',
+                desc: '第3弾！名古屋で楽しめる限定企画',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/jujutanbo03/img/top/kv.jpg',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/jujutanbo03/',
+                keywords: ['アニメ', '呪術廻戦', '名古屋', '聖地巡礼', 'じゅじゅ']
+            },
+            {
+                id: 'idol-related-1',
+                title: 'BE:FIRST × JR東海',
+                desc: '音声コンテンツやプレゼント企画が楽しめるBE:FIRSTコラボ第2弾。',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/befirst2nd/img/pic_profile@2x.webp',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/befirst2nd/',
+                keywords: ['アイドル', 'BE:FIRST', 'ライブ', '推し活', 'グッズ']
+            },
+            {
+                id: 'idol-related-2',
+                title: 'NiziU × JR東海',
+                desc: '貸切新幹線ツアーや車内装飾など、NiziU仕様の特別な旅。',
+                image: 'https://recommend.jr-central.co.jp/oshi-tabi/niziuexpress/img/pic_hero@2x.webp?v=2604002',
+                url: 'https://recommend.jr-central.co.jp/oshi-tabi/niziuexpress/',
+                keywords: ['アイドル', 'NiziU', 'ライブ', '推し活', '貸切']
+            }
+        ];
+
         const packages = {
             soccer: {
                 title: '🧡 清水エスパルス 推し旅特別企画',
@@ -905,7 +996,6 @@
             document.getElementById('packageImage').src = package.image;
             document.getElementById('packageImage').alt = package.title;
             document.getElementById('packageImageLink').href = package.url;
-            document.getElementById('campaignText').textContent = package.campaign;
             document.getElementById('detailBtn').href = 'https://recommend.jr-central.co.jp/#sec-area';
 
             const relatedSection = document.getElementById('relatedSection');
@@ -981,6 +1071,73 @@
                     // フォームを非表示、メッセージを表示
                     form.classList.add('hidden');
                     thanks.classList.remove('hidden');
+                });
+            }
+
+            // 旅検索フォーム処理
+            const searchForm = document.getElementById('travelSearchForm');
+            const searchInput = document.getElementById('travelSearchInput');
+            const searchResultsSection = document.getElementById('searchResultsSection');
+            const searchResultsList = document.getElementById('searchResultsList');
+            const searchKeywordDisplay = document.getElementById('searchKeywordDisplay');
+
+            if (searchForm && searchInput) {
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const keyword = searchInput.value.trim();
+                    if (keyword.length === 0) {
+                        return;
+                    }
+                    
+                    // キーワードマッチする旅を検索
+                    const matchedPackages = allPackages.filter(pkg => {
+                        const titleMatch = pkg.title.toLowerCase().includes(keyword.toLowerCase());
+                        const descMatch = pkg.desc.toLowerCase().includes(keyword.toLowerCase());
+                        const keywordsMatch = pkg.keywords.some(k => k.toLowerCase().includes(keyword.toLowerCase()));
+                        return titleMatch || descMatch || keywordsMatch;
+                    });
+
+                    if (matchedPackages.length === 0) {
+                        searchResultsSection.classList.add('hidden');
+                        alert(`「${keyword}」に該当する旅が見つかりませんでした。別のキーワードをお試しください。`);
+                        return;
+                    }
+
+                    // 検索結果を表示
+                    searchKeywordDisplay.textContent = `「${keyword}」`;
+                    searchResultsList.innerHTML = '';
+
+                    matchedPackages.forEach(pkg => {
+                        const resultCard = document.createElement('a');
+                        resultCard.href = pkg.url;
+                        resultCard.target = '_blank';
+                        resultCard.rel = 'noopener noreferrer';
+                        resultCard.className = 'surface-card block cursor-pointer hover:shadow-lg transition-all';
+                        resultCard.innerHTML = `
+                            <div class="flex gap-3 p-4">
+                                <img src="${pkg.image}" alt="${pkg.title}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
+                                <div class="flex-1 min-w-0">
+                                    <h5 class="font-bold text-sm text-gray-900 line-clamp-2">${pkg.title}</h5>
+                                    <p class="text-xs text-gray-600 mt-1 line-clamp-2">${pkg.desc}</p>
+                                    <div class="flex gap-1 mt-2 flex-wrap">
+                                        ${pkg.keywords.slice(0, 2).map(k => `<span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">${k}</span>`).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        searchResultsList.appendChild(resultCard);
+                    });
+
+                    searchResultsSection.classList.remove('hidden');
+
+                    // 検索履歴をローカルストレージに保存
+                    const searches = JSON.parse(localStorage.getItem('travelSearches') || '[]');
+                    searches.push({
+                        keyword: keyword,
+                        hobby: selectedHobby,
+                        timestamp: new Date().toLocaleString('ja-JP')
+                    });
+                    localStorage.setItem('travelSearches', JSON.stringify(searches));
                 });
             }
         });
