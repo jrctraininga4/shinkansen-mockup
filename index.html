@@ -83,12 +83,12 @@
 
         .hobby-button:active {
             animation: buttonPress 0.3s ease-out;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 8px rgba(234,88,12,0.18);
         }
 
         .hobby-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(234,88,12,0.18);
         }
 
         .site-logo {
@@ -373,12 +373,12 @@
         }
         }
 
-        /* Hobby buttons: more modern glass-like cards */
+        /* Hobby buttons: white for better readability */
         .hobby-button {
-            background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-            border: 1px solid rgba(212,175,55,0.3);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            color: #ffffff;
+            background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.76));
+            border: 1px solid rgba(14,21,47,0.08);
+            box-shadow: 0 8px 18px rgba(234,88,12,0.12);
+            color: #1f2937;
         }
 
         /* Site header styles */
@@ -429,7 +429,7 @@
         }
 
         .hobby-button > span:last-child {
-            color: #4b5563;
+            color: #6b7280;
         }
     </style>
 </head>
@@ -511,35 +511,35 @@
                     <!-- メインコンテンツ -->
                     <div class="flex-1 flex flex-col justify-center space-y-4">
                         <!-- ホビーボタン（ゴルフを先頭へ） -->
-                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="golf">
+                        <button class="hobby-button hobby-btn w-full py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="golf">
                             <span class="text-2xl">🏌️‍♂️</span>
                             <span class="flex-1 ml-4">ゴルフ・<br>コース巡り</span>
                             <span class="text-2xl">→</span>
                         </button>
 
                         <!-- ホビーボタン1 -->
-                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="soccer">
+                        <button class="hobby-button hobby-btn w-full py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="soccer">
                             <span class="text-2xl">⚽️</span>
                             <span class="flex-1 ml-4">サッカー観戦・<br>スタジアム巡り</span>
                             <span class="text-2xl">→</span>
                         </button>
 
                         <!-- ホビーボタン2 -->
-                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="anime">
+                        <button class="hobby-button hobby-btn w-full py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="anime">
                             <span class="text-2xl">🎬</span>
                             <span class="flex-1 ml-4">アニメ聖地巡礼・<br>物語の舞台探訪</span>
                             <span class="text-2xl">→</span>
                         </button>
 
                         <!-- ホビーボタン3 -->
-                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="idol">
+                        <button class="hobby-button hobby-btn w-full py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="idol">
                             <span class="text-2xl">🎤</span>
                             <span class="flex-1 ml-4">アイドル推し活・<br>ライブ遠征を楽しむ旅</span>
                             <span class="text-2xl">→</span>
                         </button>
 
                         <!-- ホビーボタン4（サイクリング） -->
-                        <button class="hobby-button hobby-btn w-full btn-primary text-white py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="cycling">
+                        <button class="hobby-button hobby-btn w-full py-6 px-6 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all text-left flex items-center justify-between" data-hobby="cycling">
                             <span class="text-2xl">🚴</span>
                             <span class="flex-1 ml-4">サイクリング・<br>自然とグルメを楽しむ旅</span>
                             <span class="text-2xl">→</span>
@@ -605,8 +605,8 @@
                     </div>
 
                     <!-- フィードバック入力欄 -->
-                    <div class="mt-8 pt-6 border-t border-gray-200 space-y-3">
-                        <p class="text-sm text-gray-600 leading-relaxed">
+                    <div class="mt-8 pt-6 border-t border-gray-200 space-y-3 bg-white/95 rounded-2xl p-5 shadow-sm border border-gray-200">
+                        <p class="text-sm text-gray-700 leading-relaxed">
                             他に興味のある趣味がある場合はこちらに入力してください。<br>今後の施策の参考にします。
                         </p>
                         <form id="feedbackForm" class="space-y-2">
@@ -620,7 +620,7 @@
                                 送信する
                             </button>
                         </form>
-                        <p id="feedbackThanks" class="hidden text-sm text-gray-600 leading-relaxed text-center py-2">
+                        <p id="feedbackThanks" class="hidden text-sm text-gray-700 leading-relaxed text-center py-2">
                             ご協力ありがとうございます。
                         </p>
                     </div>
